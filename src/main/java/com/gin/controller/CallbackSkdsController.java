@@ -28,9 +28,6 @@ public class CallbackSkdsController {
 	public static ObjectWriter objectWriter = new ObjectMapper().writerWithDefaultPrettyPrinter();
 	private static final Logger log = (Logger) LoggerFactory.getLogger(CallbackSkdsController.class);
 
-//	@Autowired
-//	@Qualifier("userService")
-//	private UserService userService;
 	@Autowired
 	@Qualifier("siskeudesService")
 	private SiskeudesService siskeudesService;
