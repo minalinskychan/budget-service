@@ -17,8 +17,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.gin.request.PostingSkdsCallbackRequest;
+import com.gin.request.TransactionRequest;
 import com.gin.response.CallbackResponse;
 import com.gin.service.SiskeudesService;
+import com.gin.service.TransactionBudgetService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -32,14 +34,19 @@ public class BudgetController {
 	@Qualifier("siskeudesService")
 	private SiskeudesService siskeudesService;
 	
+
+	@Autowired
+	@Qualifier("transactionBudgetService")
+	private TransactionBudgetService transactionBudgetService;
+	
 	@ApiOperation(notes = "Registration User via Channel", value = "none")
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<CallbackResponse> registerUser(@RequestBody PostingSkdsCallbackRequest request
+	public ResponseEntity<CallbackResponse> registerUser(@RequestBody TransactionRequest request
 			) {
 		logging("/register", "Request", request);
 		
-		CallbackResponse response = siskeudesService.callback(request);
+		CallbackResponse response = transactionBudgetService.tambah(request);
 		
 		if(response !=null) {
 			logging("/register", "Response", response);
