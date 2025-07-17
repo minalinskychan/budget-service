@@ -1,12 +1,27 @@
 package com.gin.response;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.gin.model.Transaksi;
+import com.gin.repository.TransaksiRepository;
 import com.gin.util.Constants;
 
 public class CallbackResponse {
 	private static final long serialVersionUID = -9035536140072673346L;
 	private String message;
 	private String reasonCode;
+	private List<Transaksi> transaksi;
+	
 
+	public CallbackResponse(boolean success,List<Transaksi> transaksi) {
+		this.transaksi=transaksi;
+		if(success)
+			setSuccessCallbackSkds();
+		else
+			setFailedCallbackSkds();
+	}
 	public CallbackResponse(boolean success) {
 		if(success)
 			setSuccessCallbackSkds();
@@ -32,6 +47,12 @@ public class CallbackResponse {
 	}
 	public void setReasonCode(String reasonCode) {
 		this.reasonCode = reasonCode;
+	}
+	public List<Transaksi> getTransaksi() {
+		return transaksi;
+	}
+	public void setTransaksi(List<Transaksi> transaksi) {
+		this.transaksi = transaksi;
 	}
 
 

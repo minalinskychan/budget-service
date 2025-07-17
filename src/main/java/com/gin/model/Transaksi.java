@@ -29,6 +29,8 @@ public class Transaksi implements Serializable {
 	@Column
 	private String spendDetail;
 	@Column
+	private String category;
+	@Column
 	private Date spendDate;
 	@Column
 	private BigDecimal spendAmount;
@@ -63,6 +65,46 @@ public class Transaksi implements Serializable {
 	public int hashCode() {
 		int hashcode = id == null ? new Long(0).hashCode() : ((String) id).hashCode();
 		return hashcode;
+	}
+
+	public String getSpendName() {
+		return spendName;
+	}
+
+	public void setSpendName(String spendName) {
+		this.spendName = spendName;
+	}
+
+	public String getSpendDetail() {
+		return spendDetail;
+	}
+
+	public void setSpendDetail(String spendDetail) {
+		this.spendDetail = spendDetail;
+	}
+
+	public Date getSpendDate() {
+		return spendDate;
+	}
+
+	public void setSpendDate(Date spendDate) {
+		this.spendDate = spendDate;
+	}
+
+	public BigDecimal getSpendAmount() {
+		return spendAmount;
+	}
+
+	public void setSpendAmount(BigDecimal spendAmount) {
+		this.spendAmount = spendAmount;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 //	public String getFormattedDate() {

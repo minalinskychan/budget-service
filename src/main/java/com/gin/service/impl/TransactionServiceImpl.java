@@ -1,6 +1,12 @@
 package com.gin.service.impl;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -15,6 +21,7 @@ import com.gin.controller.CallbackSkdsController;
 import com.gin.model.Siskeudes;
 import com.gin.model.SkdsBilling;
 import com.gin.model.SkdsBuktiBayar;
+import com.gin.model.Transaksi;
 import com.gin.repository.SiskeudesRepository;
 import com.gin.repository.SkdsBillingRepository;
 import com.gin.repository.SkdsBuktiBayarRepository;
@@ -128,12 +135,37 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 
 	@Override
 	public CallbackResponse tambah(TransactionRequest request) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+		Transaksi transaksi = new Transaksi();
+		List <Transaksi>transaksis;
+		Date date; 
 		try {
+			String dateInString = request.getTanggal();
+			date = formatter.parse(dateInString);
+			transaksi.setSpendAmount(BigDecimal.valueOf(Double.valueOf(request.getTotal())));
+			transaksi.setSpendDate(date);
+			transaksi.setSpendDetail(request.getDeskripsi());
+			transaksi.setSpendName(request.getName());
+			transaksi.setCategory(request.getCategory());
+
 			log.info(objectWriter.writeValueAsString(request));
+			transaksiRepository.save(transaksi);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+//			transaksis = transaksiRepository.findAll();
+//			return new CallbackResponse(false,transaksis);
+			return new CallbackResponse(false);
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+//			transaksis = transaksiRepository.findAll();
+//			return new CallbackResponse(false,transaksis);
+			return new CallbackResponse(false);
 		}
+//		transaksis = transaksiRepository.findAll();
+//		return new CallbackResponse(true,transaksis);
 		return new CallbackResponse(true);
 	}
 

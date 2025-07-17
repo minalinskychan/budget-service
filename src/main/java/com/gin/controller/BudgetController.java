@@ -39,7 +39,7 @@ public class BudgetController {
 	@Qualifier("transactionBudgetService")
 	private TransactionBudgetService transactionBudgetService;
 	
-	@ApiOperation(notes = "Registration User via Channel", value = "none")
+	@ApiOperation(notes = "Pencatatan pengeluaran", value = "none")
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<CallbackResponse> registerUser(@RequestBody TransactionRequest request
