@@ -178,7 +178,7 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 	
 	@Override
 	public String totalSpecificMont(TotalRequest totalRequest) {
-		String total = transaksiRepository.getTotalSpecificMonth(month,year);
+		String total = transaksiRepository.getTotalSpecificDate(totalRequest.getTanggal(),totalRequest.getTanggalAkhir());
 		return total;
 	}
 
