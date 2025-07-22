@@ -1,6 +1,7 @@
 package com.gin.service;
 
 import com.gin.request.PostingSkdsCallbackRequest;
+import com.gin.request.TotalRequest;
 import com.gin.request.TransactionRequest;
 import com.gin.response.CallbackResponse;
 
@@ -9,4 +10,6 @@ public interface TransactionBudgetService {
 	
 
 	public CallbackResponse tambah(TransactionRequest request);
+	public String total();
+	public String totalSpecificMont(TotalRequest totalRequest);
 }

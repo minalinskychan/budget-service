@@ -29,6 +29,7 @@ import com.gin.repository.TransaksiRepository;
 import com.gin.request.DaftarPotonganDaerah;
 import com.gin.request.DaftarPotonganMpn;
 import com.gin.request.PostingSkdsCallbackRequest;
+import com.gin.request.TotalRequest;
 import com.gin.request.TransactionRequest;
 import com.gin.response.CallbackResponse;
 import com.gin.service.SiskeudesService;
@@ -167,6 +168,18 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 //		transaksis = transaksiRepository.findAll();
 //		return new CallbackResponse(true,transaksis);
 		return new CallbackResponse(true);
+	}
+
+	@Override
+	public String total() {
+		String total = transaksiRepository.getTotal();
+		return total;
+	}
+	
+	@Override
+	public String totalSpecificMont(TotalRequest totalRequest) {
+		String total = transaksiRepository.getTotalSpecificMonth(month,year);
+		return total;
 	}
 
 }

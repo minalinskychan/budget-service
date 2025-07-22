@@ -14,8 +14,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 
 @Entity
-@Table(name = "transaksi")
-public class Transaksi implements Serializable {
+@Table(name = "kategori")
+public class Category implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -25,17 +25,9 @@ public class Transaksi implements Serializable {
 	@Column
 	private String id;
 	@Column
-	private String spendName;
+	private String categoryName;
 	@Column
-	private String spendDetail;
-	@Column
-	private String category;
-	@Column
-	private Date spendDate;
-	@Column
-	private Date createdDate;
-	@Column
-	private BigDecimal spendAmount;
+	private BigDecimal categoryAllocation;
 
 
 	public String getId() {
@@ -54,11 +46,11 @@ public class Transaksi implements Serializable {
 		if (this == o) {
 			return true;
 		}
-		if (!(o.getClass().isAssignableFrom(Transaksi.class))) {
+		if (!(o.getClass().isAssignableFrom(Category.class))) {
 			return false;
 		}
 
-		final Transaksi cc = (Transaksi) o;
+		final Category cc = (Category) o;
 
 		return (id == cc.getId());
 	}
@@ -69,52 +61,20 @@ public class Transaksi implements Serializable {
 		return hashcode;
 	}
 
-	public String getSpendName() {
-		return spendName;
+	public String getCategoryName() {
+		return categoryName;
 	}
 
-	public void setSpendName(String spendName) {
-		this.spendName = spendName;
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
-	public String getSpendDetail() {
-		return spendDetail;
+	public BigDecimal getCategoryAllocation() {
+		return categoryAllocation;
 	}
 
-	public void setSpendDetail(String spendDetail) {
-		this.spendDetail = spendDetail;
-	}
-
-	public Date getSpendDate() {
-		return spendDate;
-	}
-
-	public void setSpendDate(Date spendDate) {
-		this.spendDate = spendDate;
-	}
-
-	public BigDecimal getSpendAmount() {
-		return spendAmount;
-	}
-
-	public void setSpendAmount(BigDecimal spendAmount) {
-		this.spendAmount = spendAmount;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
+	public void setCategoryAllocation(BigDecimal categoryAllocation) {
+		this.categoryAllocation = categoryAllocation;
 	}
 
 //	public String getFormattedDate() {

@@ -1,5 +1,8 @@
 package com.gin.controller;
 
+import java.util.Map;
+
+import org.hibernate.annotations.SortComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.gin.request.PostingSkdsCallbackRequest;
+import com.gin.request.TotalRequest;
 import com.gin.request.TransactionRequest;
 import com.gin.response.CallbackResponse;
 import com.gin.service.SiskeudesService;
@@ -53,6 +58,40 @@ public class BudgetController {
 			return new ResponseEntity<CallbackResponse>(response, HttpStatus.OK);
 		}else {
 			return new ResponseEntity<CallbackResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@ApiOperation(notes = "Pencatatan pengeluaran", value = "none")
+	@RequestMapping(value = "/gettotal", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<String> getTotal(
+			) {
+		logging("/register", "Request", "");
+		
+		String response = transactionBudgetService.total();
+		
+		if(response !=null) {
+			logging("/register", "Response", response);
+			return new ResponseEntity<String>(response, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<String>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@ApiOperation(notes = "Pencatatan pengeluaran", value = "none")
+	@RequestMapping(value = "/gettotal", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<String> getTotalSpecificMonth(
+			@RequestBody TotalRequest request
+			) {
+		logging("/register", "Request", request);
+		String response = transactionBudgetService.totalSpecificMont(request);
+		
+		if(response !=null) {
+			logging("/register", "Response", response);
+			return new ResponseEntity<String>(response, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<String>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
