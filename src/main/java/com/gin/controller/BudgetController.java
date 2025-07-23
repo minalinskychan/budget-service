@@ -1,5 +1,10 @@
 package com.gin.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import org.hibernate.annotations.SortComparator;
@@ -44,7 +49,7 @@ public class BudgetController {
 	@Qualifier("transactionBudgetService")
 	private TransactionBudgetService transactionBudgetService;
 	
-	@ApiOperation(notes = "Pencatatan pengeluaran", value = "none")
+	@ApiOperation(notes = "Tambah pengeluaran", value = "none")
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<CallbackResponse> registerUser(@RequestBody TransactionRequest request
@@ -61,7 +66,7 @@ public class BudgetController {
 		}
 	}
 	
-	@ApiOperation(notes = "Pencatatan pengeluaran", value = "none")
+	@ApiOperation(notes = "Ambil total pengeluaran", value = "none")
 	@RequestMapping(value = "/gettotal", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<String> getTotal(
@@ -78,7 +83,7 @@ public class BudgetController {
 		}
 	}
 	
-	@ApiOperation(notes = "Pencatatan pengeluaran", value = "none")
+	@ApiOperation(notes = "Ambil total tanggal spesifik", value = "none")
 	@RequestMapping(value = "/gettotal", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<String> getTotalSpecificMonth(
@@ -95,6 +100,34 @@ public class BudgetController {
 		}
 	}
 
+	@ApiOperation(notes = "Ambil pengeluaran rata-rata setahun terakhir", value = "none")
+	@RequestMapping(value = "/getaveragespend", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<String> getTotalAverageYear(
+//			@RequestBody TotalRequest request
+			) {
+
+		Date dateToday = new Date();
+		Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -1);
+        Date dateLastYear = calendar.getTime();
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		String formattedDateToday = formatter.format(dateToday);
+		String formattedDateLastYear = formatter.format(dateLastYear);
+
+		TotalRequest request = new TotalRequest();
+		request.setTanggalAkhir(formattedDateToday);
+		request.setTanggal(formattedDateLastYear);
+		logging("/register", "Request", request);
+		String response = transactionBudgetService.totalSpecificMont(request);
+		
+		if(response !=null) {
+			logging("/register", "Response", response);
+			return new ResponseEntity<String>(response, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<String>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 		
 	private void logging(String path,String type,Object request) {
 		log.info("PATH : "+path);
