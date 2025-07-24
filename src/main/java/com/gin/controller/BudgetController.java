@@ -29,6 +29,7 @@ import com.gin.request.PostingSkdsCallbackRequest;
 import com.gin.request.TotalRequest;
 import com.gin.request.TransactionRequest;
 import com.gin.response.CallbackResponse;
+import com.gin.response.TargetKeuangan;
 import com.gin.service.SiskeudesService;
 import com.gin.service.TransactionBudgetService;
 
@@ -107,19 +108,32 @@ public class BudgetController {
 //			@RequestBody TotalRequest request
 			) {
 
-		Date dateToday = new Date();
+		
+		logging("/register", "Request", "");
+		String response = transactionBudgetService.totalAverage();
+		
+		if(response !=null) {
+			logging("/register", "Response", response);
+			return new ResponseEntity<String>(response, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<String>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	@ApiOperation(notes = "Ambil pengeluaran bulan ini", value = "none")
+	@RequestMapping(value = "/getthistmont", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<String> getThisMonth(
+//			@RequestBody TotalRequest request
+			) {
+		
 		Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.YEAR, -1);
-        Date dateLastYear = calendar.getTime();
-		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-		String formattedDateToday = formatter.format(dateToday);
-		String formattedDateLastYear = formatter.format(dateLastYear);
-
-		TotalRequest request = new TotalRequest();
-		request.setTanggalAkhir(formattedDateToday);
-		request.setTanggal(formattedDateLastYear);
-		logging("/register", "Request", request);
-		String response = transactionBudgetService.totalSpecificMont(request);
+        
+        int monthNumber = calendar.get(Calendar.MONTH) + 1; // +1 karena Januari = 0
+        String month = String.valueOf(monthNumber);
+        int yearNumber = calendar.get(Calendar.YEAR); // +1 karena Januari = 0
+        String year= String.valueOf(yearNumber);
+		logging("/register", "Request", "month "+month+" year "+year);
+		String response = transactionBudgetService.totalSpecificMonth(month,year);
 		
 		if(response !=null) {
 			logging("/register", "Response", response);
@@ -129,6 +143,46 @@ public class BudgetController {
 		}
 	}
 		
+	@ApiOperation(notes = "Ambil pengeluaran Tahun ini", value = "none")
+	@RequestMapping(value = "/getthisyear", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<String> getThisYear(
+//			@RequestBody TotalRequest request
+			) {
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		int yearNumber = calendar.get(Calendar.YEAR); // +1 karena Januari = 0
+		String year= String.valueOf(yearNumber);
+		logging("/register", "Request", "year "+year);
+		String response = transactionBudgetService.totalSpecificYear(year);
+		
+		if(response !=null) {
+			logging("/register", "Response", response);
+			return new ResponseEntity<String>(response, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<String>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	@ApiOperation(notes = "Ambil Target Keuangan", value = "none")
+	@RequestMapping(value = "/financialplan", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<TargetKeuangan> getFinancialPlan(
+//			@RequestBody TotalRequest request
+			) {
+		
+		
+		logging("/getthisyear", "Ambil Target Keuangan", null);
+		TargetKeuangan response = transactionBudgetService.totalFinancialPlan();
+		
+		if(response !=null) {
+			logging("/getthisyear", "Ambil Target Keuangan", response);
+			return new ResponseEntity<TargetKeuangan>(response, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<TargetKeuangan>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	private void logging(String path,String type,Object request) {
 		log.info("PATH : "+path);
 		try {

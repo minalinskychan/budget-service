@@ -1,9 +1,12 @@
 package com.gin.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +35,9 @@ import com.gin.request.PostingSkdsCallbackRequest;
 import com.gin.request.TotalRequest;
 import com.gin.request.TransactionRequest;
 import com.gin.response.CallbackResponse;
+import com.gin.response.DanaDarurat;
+import com.gin.response.DanaPensiun;
+import com.gin.response.TargetKeuangan;
 import com.gin.service.SiskeudesService;
 import com.gin.service.TransactionBudgetService;
 import com.gin.util.Constants;
@@ -180,6 +186,68 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 	public String totalSpecificMont(TotalRequest totalRequest) {
 		String total = transaksiRepository.getTotalSpecificDate(totalRequest.getTanggal(),totalRequest.getTanggalAkhir());
 		return total;
+	}
+	@Override
+	public String totalSpecificMonth(String month,String year) {
+		String total = transaksiRepository.getTotalSpecificMonth(month,year);
+		return total;
+	}
+	@Override
+	public String totalSpecificYear(String year) {
+		String total = transaksiRepository.getTotalSpecificYear(year);
+		return total;
+	}
+
+	@Override
+	public TargetKeuangan totalFinancialPlan() {
+		String pengeluaran = totalAverage();
+		double pengeluaranInt = Double.valueOf(pengeluaran);
+		double danaPensiunInt = pengeluaranInt*12*25;
+		String danaPensiun=String.format("%.0f",danaPensiunInt);
+		String danaPensiunRdpt;
+		String danaPensiunDeposito;	
+		if(danaPensiunInt>(2*Math.pow(10, 9))) {
+			danaPensiunRdpt=String.format("%.0f", danaPensiunInt-(2*Math.pow(10, 9)));
+			danaPensiunDeposito=String.valueOf((2*Math.pow(10, 9)));
+			
+		}else {
+			danaPensiunRdpt=String.format("%.0f", danaPensiunInt/2);
+			danaPensiunDeposito=String.format("%.0f",danaPensiunInt/2);
+		}
+		double danaDaruratInt=pengeluaranInt*12;
+		String danaDarurat=String.format("%.0f",danaDaruratInt);
+		String danaDaruratRdpu=String.format("%.0f", danaDaruratInt - pengeluaranInt - (2*Math.pow(10, 7)));
+		String danaDaruratRdpt=pengeluaran;
+		String danaDaruratDeposito=String.valueOf((2*Math.pow(10, 9)));
+		DanaDarurat danaDarurats = new DanaDarurat("",danaDarurat,danaDaruratRdpt,danaDaruratRdpu,danaDaruratDeposito);
+		DanaPensiun danaPensiuns = new DanaPensiun("",danaPensiun,danaPensiunRdpt,danaPensiunDeposito); 
+		TargetKeuangan targetKeuangan = new TargetKeuangan(true,danaPensiuns,danaDarurats);
+		return targetKeuangan;
+	}
+
+	@Override
+	public String totalAverage() {
+		Date dateToday = new Date();
+		Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -1);
+        Date dateLastYear = calendar.getTime();
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		String formattedDateToday = formatter.format(dateToday);
+		String formattedDateLastYear = formatter.format(dateLastYear);
+
+		TotalRequest request = new TotalRequest();
+		request.setTanggalAkhir(formattedDateToday);
+		request.setTanggal(formattedDateLastYear);
+		String lastYearString = totalSpecificMont(request);
+//		BigDecimal lastYear = new BigDecimal(lastYearString);
+		double latestYear = Double.valueOf(lastYearString);
+		double average = latestYear/12;
+		BigDecimal bd = new BigDecimal(average);
+		bd = bd.setScale(2, RoundingMode.CEILING);
+//		String averageString=String.valueOf(average);
+		String averageString=String.format("%.0f", bd);;
+		
+		return averageString;
 	}
 
 }
