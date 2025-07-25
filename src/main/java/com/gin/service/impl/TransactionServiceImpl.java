@@ -206,9 +206,11 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 		String danaPensiun=String.format("%.0f",danaPensiunInt);
 		String danaPensiunRdpt;
 		String danaPensiunDeposito;	
+		double apalah;
 		if(danaPensiunInt>(2*Math.pow(10, 9))) {
 			danaPensiunRdpt=String.format("%.0f", danaPensiunInt-(2*Math.pow(10, 9)));
-			danaPensiunDeposito=String.valueOf((2*Math.pow(10, 9)));
+			apalah = (2*Math.pow(10, 9));
+			danaPensiunDeposito=String.format("%.0f",apalah);
 			
 		}else {
 			danaPensiunRdpt=String.format("%.0f", danaPensiunInt/2);
@@ -216,9 +218,10 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 		}
 		double danaDaruratInt=pengeluaranInt*12;
 		String danaDarurat=String.format("%.0f",danaDaruratInt);
-		String danaDaruratRdpu=String.format("%.0f", danaDaruratInt - pengeluaranInt - (2*Math.pow(10, 7)));
-		String danaDaruratRdpt=pengeluaran;
-		String danaDaruratDeposito=String.valueOf((2*Math.pow(10, 9)));
+		String danaDaruratRdpt=String.format("%.0f", danaDaruratInt - pengeluaranInt - (2*Math.pow(10, 7)));
+		String danaDaruratRdpu=pengeluaran;
+		apalah = (2*Math.pow(10, 7));
+		String danaDaruratDeposito=String.format("%.0f",apalah);
 		DanaDarurat danaDarurats = new DanaDarurat("",danaDarurat,danaDaruratRdpt,danaDaruratRdpu,danaDaruratDeposito);
 		DanaPensiun danaPensiuns = new DanaPensiun("",danaPensiun,danaPensiunRdpt,danaPensiunDeposito); 
 		TargetKeuangan targetKeuangan = new TargetKeuangan(true,danaPensiuns,danaDarurats);
