@@ -222,6 +222,12 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 		String danaDaruratRdpu=pengeluaran;
 		apalah = (2*Math.pow(10, 7));
 		String danaDaruratDeposito=String.format("%.0f",apalah);
+		if(danaDaruratInt>(2*Math.pow(10, 7))) {
+			
+		} else {
+			
+		}
+		
 		DanaDarurat danaDarurats = new DanaDarurat("",danaDarurat,danaDaruratRdpt,danaDaruratRdpu,danaDaruratDeposito);
 		DanaPensiun danaPensiuns = new DanaPensiun("",danaPensiun,danaPensiunRdpt,danaPensiunDeposito); 
 		TargetKeuangan targetKeuangan = new TargetKeuangan(true,danaPensiuns,danaDarurats);
