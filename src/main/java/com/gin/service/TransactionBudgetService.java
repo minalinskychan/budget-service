@@ -1,13 +1,11 @@
 package com.gin.service;
 
-import com.gin.request.PostingSkdsCallbackRequest;
 import com.gin.request.TotalRequest;
 import com.gin.request.TransactionRequest;
 import com.gin.response.CallbackResponse;
 import com.gin.response.TargetKeuangan;
 
 public interface TransactionBudgetService {
-	public CallbackResponse callback(PostingSkdsCallbackRequest request);
 	
 
 	public CallbackResponse tambah(TransactionRequest request);

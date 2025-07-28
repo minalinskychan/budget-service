@@ -380,7 +380,12 @@ public class Minify {
    */
   
   public static class UnterminatedCommentException extends Exception {
-    public UnterminatedCommentException(int line, int column) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public UnterminatedCommentException(int line, int column) {
       super("Unterminated comment at line " + line + " and column " + column);
     }
   }
@@ -389,7 +394,12 @@ public class Minify {
    * Exception to be thrown when an unterminated string literal appears in the input.
    */
   public static class UnterminatedStringLiteralException extends Exception {
-    public UnterminatedStringLiteralException(int line, int column) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public UnterminatedStringLiteralException(int line, int column) {
       super("Unterminated string literal at line " + line + " and column " + column);
     }
   }
@@ -398,7 +408,12 @@ public class Minify {
    * Exception to be thrown when an unterminated regular expression literal appears in the input.
    */
   public static class UnterminatedRegExpLiteralException extends Exception {
-    public UnterminatedRegExpLiteralException(int line, int column) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public UnterminatedRegExpLiteralException(int line, int column) {
       super("Unterminated regular expression at line " + line + " and column " + column);
     }
   }

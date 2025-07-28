@@ -1,14 +1,7 @@
 package com.gin.response;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.gin.model.Transaksi;
-import com.gin.repository.TransaksiRepository;
-import com.gin.util.Constants;
-
 public class DanaPensiun {
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -9035536140072673346L;
 	private String Keterangan;
 	private String nominal;

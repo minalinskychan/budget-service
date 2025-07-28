@@ -1,13 +1,7 @@
 package com.gin.controller;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
 
-import org.hibernate.annotations.SortComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +13,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.gin.request.PostingSkdsCallbackRequest;
 import com.gin.request.TotalRequest;
 import com.gin.request.TransactionRequest;
 import com.gin.response.CallbackResponse;
 import com.gin.response.TargetKeuangan;
-import com.gin.service.SiskeudesService;
 import com.gin.service.TransactionBudgetService;
 
 import io.swagger.annotations.ApiOperation;
@@ -40,11 +31,6 @@ import io.swagger.annotations.ApiOperation;
 public class BudgetController {
 	public static ObjectWriter objectWriter = new ObjectMapper().writerWithDefaultPrettyPrinter();
 	private static final Logger log = (Logger) LoggerFactory.getLogger(BudgetController.class);
-
-	@Autowired
-	@Qualifier("siskeudesService")
-	private SiskeudesService siskeudesService;
-	
 
 	@Autowired
 	@Qualifier("transactionBudgetService")
