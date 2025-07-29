@@ -65,18 +65,12 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 			transaksiRepository.save(transaksi);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
-//			transaksis = transaksiRepository.findAll();
-//			return new CallbackResponse(false,transaksis);
 			return new CallbackResponse(false);
 			
 		} catch (ParseException e) {
 			e.printStackTrace();
-//			transaksis = transaksiRepository.findAll();
-//			return new CallbackResponse(false,transaksis);
 			return new CallbackResponse(false);
 		}
-//		transaksis = transaksiRepository.findAll();
-//		return new CallbackResponse(true,transaksis);
 		return new CallbackResponse(true);
 	}
 
