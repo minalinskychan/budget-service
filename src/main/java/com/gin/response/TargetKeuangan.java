@@ -1,49 +1,18 @@
 package com.gin.response;
 
-import com.gin.util.Constants;
-
-public class TargetKeuangan {
-	@SuppressWarnings("unused")
+public class TargetKeuangan extends BaseResponse{
 	private static final long serialVersionUID = -9035536140072673346L;
-	private String message;
-	private String reasonCode;
 	private DanaPensiun danaPensiun;
 	private DanaDarurat danaDarurat;
 	
 
 	public TargetKeuangan(boolean success,DanaPensiun danaPensiun, DanaDarurat danaDarurat) {
+		super(success);
 		this.danaPensiun=danaPensiun;
 		this.danaDarurat=danaDarurat;
-		if(success)
-			setSuccessCallbackSkds();
-		else
-			setFailedCallbackSkds();
 	}
 	public TargetKeuangan(boolean success) {
-		if(success)
-			setSuccessCallbackSkds();
-		else
-			setFailedCallbackSkds();
-	}
-	public void setSuccessCallbackSkds() {
-		this.message = Constants.MESSAGE_SUCCESS;
-		this.reasonCode=Constants.RC_SUCCESS;
-	}
-	public void setFailedCallbackSkds() {
-		this.message = Constants.MESSAGE_GENERAL_ERROR;
-		this.reasonCode=Constants.RC_GENERAL_ERROR;
-	}
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public String getReasonCode() {
-		return reasonCode;
-	}
-	public void setReasonCode(String reasonCode) {
-		this.reasonCode = reasonCode;
+		super(success);
 	}
 	public DanaPensiun getDanaPensiun() {
 		return danaPensiun;

@@ -10,7 +10,7 @@ public interface TransaksiRepository extends JpaRepository<Transaksi, String> {
 	Transaksi findByid(String id);
 
 	@Query(value = "SELECT SUM(t.spend_amount) FROM transaksi t ", nativeQuery = true)
-	String getTotal();
+	Double getTotal();
 	@Query(value = "SELECT SUM(t.spend_amount) FROM transaksi t where month(t.spend_date)=:month and year(t.spend_date)=:year", nativeQuery = true)
 	String getTotalSpecificMonth(String month, String year);
 	@Query(value = "SELECT SUM(t.spend_amount) FROM transaksi t where year(t.spend_date)=:year", nativeQuery = true)

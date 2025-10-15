@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.slf4j.Logger;
@@ -22,7 +23,8 @@ import com.gin.model.Transaksi;
 import com.gin.repository.TransaksiRepository;
 import com.gin.request.TotalRequest;
 import com.gin.request.TransactionRequest;
-import com.gin.response.CallbackResponse;
+import com.gin.response.AddTransaksiResponse;
+import com.gin.response.BaseResponse;
 import com.gin.response.DanaDarurat;
 import com.gin.response.DanaPensiun;
 import com.gin.response.TargetKeuangan;
@@ -48,7 +50,7 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 	}
 
 	@Override
-	public CallbackResponse tambah(TransactionRequest request) {
+	public AddTransaksiResponse tambah(TransactionRequest request) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
 		Transaksi transaksi = new Transaksi();
 		Date date; 
@@ -65,19 +67,19 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 			transaksiRepository.save(transaksi);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
-			return new CallbackResponse(false);
+			return new AddTransaksiResponse(false);
 			
 		} catch (ParseException e) {
 			e.printStackTrace();
-			return new CallbackResponse(false);
+			return new AddTransaksiResponse(false);
 		}
-		return new CallbackResponse(true);
+		List<Transaksi> transaksis = transaksiRepository.findAll();
+		return new AddTransaksiResponse(true,transaksis);
 	}
 
 	@Override
-	public String total() {
-		String total = transaksiRepository.getTotal();
-		return total;
+	public Double total() {
+		return transaksiRepository.getTotal();
 	}
 	
 	@Override
@@ -155,6 +157,12 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 		String averageString=String.format("%.0f", bd);;
 		
 		return averageString;
+	}
+
+	@Override
+	public void getAllSpend() {
+		// TODO Auto-generated method stub
+		
 	}
 
 
