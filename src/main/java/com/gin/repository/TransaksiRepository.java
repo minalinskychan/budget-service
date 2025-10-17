@@ -1,5 +1,7 @@
 package com.gin.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -10,13 +12,21 @@ public interface TransaksiRepository extends JpaRepository<Transaksi, String> {
 	Transaksi findByid(String id);
 
 	@Query(value = "SELECT SUM(t.spend_amount) FROM transaksi t ", nativeQuery = true)
-	Double getTotal();
+	String getTotal();
+	@Query(value = "SELECT * FROM transaksi t ", nativeQuery = true)
+	List<Transaksi> getAllTransaksi();
 	@Query(value = "SELECT SUM(t.spend_amount) FROM transaksi t where month(t.spend_date)=:month and year(t.spend_date)=:year", nativeQuery = true)
 	String getTotalSpecificMonth(String month, String year);
 	@Query(value = "SELECT SUM(t.spend_amount) FROM transaksi t where year(t.spend_date)=:year", nativeQuery = true)
 	String getTotalSpecificYear(String year);
 	@Query(value = "SELECT SUM(t.spend_amount) FROM transaksi t where t.spend_date >=:start and t.spend_date <:end", nativeQuery = true)
 	String getTotalSpecificDate(String start, String end);
+	@Query(value = "SELECT * FROM transaksi t where t.spend_date >=:start and t.spend_date <:end", nativeQuery = true)
+	List<Transaksi> getSpecificDateTransaksi(String start, String end);
+	@Query(value = "SELECT * FROM transaksi t where month(t.spend_date)=:month and year(t.spend_date)=:year", nativeQuery = true)
+	List<Transaksi> getTransaksiSpecificMonth(String month, String year);
+	@Query(value = "SELECT * FROM transaksi t where year(t.spend_date)=:year", nativeQuery = true)
+	List<Transaksi> getTransaksiSpecificYear(String year);
 	
 
 }

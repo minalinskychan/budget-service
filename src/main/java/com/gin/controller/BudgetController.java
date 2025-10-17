@@ -1,6 +1,7 @@
 package com.gin.controller;
 
 import java.util.Calendar;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.gin.model.Transaksi;
 import com.gin.request.TotalRequest;
 import com.gin.request.TransactionRequest;
-import com.gin.response.AddTransaksiResponse;
+import com.gin.response.TransaksiResponse;
 import com.gin.response.TargetKeuangan;
 import com.gin.service.TransactionBudgetService;
 
@@ -39,115 +41,108 @@ public class BudgetController {
 	@ApiOperation(notes = "Tambah pengeluaran", value = "none")
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<AddTransaksiResponse> registerUser(@RequestBody TransactionRequest request
+	public ResponseEntity<TransaksiResponse> addRecord(@RequestBody TransactionRequest request
 			) {
 		logging("/add", "Request", request);
 		
-		AddTransaksiResponse response = transactionBudgetService.tambah(request);
+		TransaksiResponse response = transactionBudgetService.tambah(request);
 		
 		if(response !=null) {
 			logging("/add", "Response", response);
-			return new ResponseEntity<AddTransaksiResponse>(response, HttpStatus.OK);
+			return new ResponseEntity<TransaksiResponse>(response, HttpStatus.OK);
 		}else {
-			return new ResponseEntity<AddTransaksiResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<TransaksiResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@ApiOperation(notes = "Ambil total pengeluaran", value = "none")
 	@RequestMapping(value = "/gettotal", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Double> getTotal(
+	public ResponseEntity<TransaksiResponse> getTotal(
 			) {
 		logging("/gettotal", "Request", "");
-		transactionBudgetService.getAllSpend();
-		Double response = transactionBudgetService.total();
+		TransaksiResponse response = transactionBudgetService.getAllTransaction();
+//		Double response = transactionBudgetService.total();
 		
 		if(response !=null) {
 			logging("/gettotal", "Response", response);
-			return new ResponseEntity<Double>(response, HttpStatus.OK);
+			return new ResponseEntity<TransaksiResponse>(response, HttpStatus.OK);
 		}else {
-			return new ResponseEntity<Double>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<TransaksiResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@ApiOperation(notes = "Ambil total tanggal spesifik", value = "none")
 	@RequestMapping(value = "/gettotal", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<String> getTotalSpecificMonth(
+	public ResponseEntity<TransaksiResponse> getTotalSpecificMonth(
 			@RequestBody TotalRequest request
 			) {
 		logging("/gettotal", "Request", request);
-		String response = transactionBudgetService.totalSpecificMont(request);
+//		String response = transactionBudgetService.totalSpecificMont(request);
+		TransaksiResponse response = transactionBudgetService.getSpecifictRequestTransaction(request);
 		
 		if(response !=null) {
 			logging("/gettotal", "Response", response);
-			return new ResponseEntity<String>(response, HttpStatus.OK);
+			return new ResponseEntity<TransaksiResponse>(response, HttpStatus.OK);
 		}else {
-			return new ResponseEntity<String>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<TransaksiResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	@ApiOperation(notes = "Ambil pengeluaran rata-rata setahun terakhir", value = "none")
-	@RequestMapping(value = "/getaveragespend", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public ResponseEntity<String> getTotalAverageYear(
-//			@RequestBody TotalRequest request
-			) {
-
-		
-		logging("/getaveragespend", "Request", "");
-		String response = transactionBudgetService.totalAverage();
-		
-		if(response !=null) {
-			logging("/getaveragespend", "Response", response);
-			return new ResponseEntity<String>(response, HttpStatus.OK);
-		}else {
-			return new ResponseEntity<String>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+//	@ApiOperation(notes = "Ambil pengeluaran rata-rata setahun terakhir", value = "none")
+//	@RequestMapping(value = "/getaveragespend", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+//	@ResponseBody
+//	public ResponseEntity<String> getTotalAverageYear(
+////			@RequestBody TotalRequest request
+//			) {
+//
+//		
+//		logging("/getaveragespend", "Request", "");
+//		String response = transactionBudgetService.totalAverage();
+//		
+//		if(response !=null) {
+//			logging("/getaveragespend", "Response", response);
+//			return new ResponseEntity<String>(response, HttpStatus.OK);
+//		}else {
+//			return new ResponseEntity<String>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
 	@ApiOperation(notes = "Ambil pengeluaran bulan ini", value = "none")
 	@RequestMapping(value = "/getthistmont", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<String> getThisMonth(
+	public ResponseEntity<TransaksiResponse> getThisMonth(
 //			@RequestBody TotalRequest request
 			) {
 		
-		Calendar calendar = Calendar.getInstance();
-        
-        int monthNumber = calendar.get(Calendar.MONTH) + 1; // +1 karena Januari = 0
-        String month = String.valueOf(monthNumber);
-        int yearNumber = calendar.get(Calendar.YEAR); // +1 karena Januari = 0
-        String year= String.valueOf(yearNumber);
-		logging("/getthistmont", "Request", "month "+month+" year "+year);
-		String response = transactionBudgetService.totalSpecificMonth(month,year);
+		
+		logging("/getthistmont", "Request", "");
+		TransaksiResponse response = transactionBudgetService.getThisMonth();
 		
 		if(response !=null) {
 			logging("/getthistmont", "Response", response);
-			return new ResponseEntity<String>(response, HttpStatus.OK);
+			return new ResponseEntity<TransaksiResponse>(response, HttpStatus.OK);
 		}else {
-			return new ResponseEntity<String>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<TransaksiResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 		
 	@ApiOperation(notes = "Ambil pengeluaran Tahun ini", value = "none")
 	@RequestMapping(value = "/getthisyear", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<String> getThisYear(
+	public ResponseEntity<TransaksiResponse> getThisYear(
 //			@RequestBody TotalRequest request
 			) {
 		
-		Calendar calendar = Calendar.getInstance();
-		
-		int yearNumber = calendar.get(Calendar.YEAR); // +1 karena Januari = 0
-		String year= String.valueOf(yearNumber);
-		logging("/getthisyear", "Request", "year "+year);
-		String response = transactionBudgetService.totalSpecificYear(year);
+
+		logging("/getthisyear", "Request", "year ");
+		TransaksiResponse response = transactionBudgetService.getSpecificYear();
 		
 		if(response !=null) {
 			logging("/getthisyear", "Response", response);
-			return new ResponseEntity<String>(response, HttpStatus.OK);
+			return new ResponseEntity<TransaksiResponse>(response, HttpStatus.OK);
 		}else {
-			return new ResponseEntity<String>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<TransaksiResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	@ApiOperation(notes = "Ambil Target Keuangan", value = "none")

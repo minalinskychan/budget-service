@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -23,11 +24,10 @@ import com.gin.model.Transaksi;
 import com.gin.repository.TransaksiRepository;
 import com.gin.request.TotalRequest;
 import com.gin.request.TransactionRequest;
-import com.gin.response.AddTransaksiResponse;
-import com.gin.response.BaseResponse;
 import com.gin.response.DanaDarurat;
 import com.gin.response.DanaPensiun;
 import com.gin.response.TargetKeuangan;
+import com.gin.response.TransaksiResponse;
 import com.gin.service.TransactionBudgetService;
 
 @Service("transactionBudgetService")
@@ -50,7 +50,7 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 	}
 
 	@Override
-	public AddTransaksiResponse tambah(TransactionRequest request) {
+	public TransaksiResponse tambah(TransactionRequest request) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
 		Transaksi transaksi = new Transaksi();
 		Date date; 
@@ -67,19 +67,26 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 			transaksiRepository.save(transaksi);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
-			return new AddTransaksiResponse(false);
+			return new TransaksiResponse(false);
 			
 		} catch (ParseException e) {
 			e.printStackTrace();
-			return new AddTransaksiResponse(false);
+			return new TransaksiResponse(false);
 		}
-		List<Transaksi> transaksis = transaksiRepository.findAll();
-		return new AddTransaksiResponse(true,transaksis);
+		return getThisMonth();
 	}
 
 	@Override
-	public Double total() {
+	public String total() {
 		return transaksiRepository.getTotal();
+	}
+	
+	@Override
+	public TransaksiResponse getAllTransaction() {
+		
+		List<Transaksi> transaksis = transaksiRepository.getAllTransaksi();
+		String total = transaksiRepository.getTotal();
+		return new TransaksiResponse(true,transaksis,total );
 	}
 	
 	@Override
@@ -88,54 +95,71 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 		return total;
 	}
 	@Override
-	public String totalSpecificMonth(String month,String year) {
+	public TransaksiResponse getThisMonth() {
+		Calendar calendar = Calendar.getInstance();
+        
+        int monthNumber = calendar.get(Calendar.MONTH) + 1; // +1 karena Januari = 0
+        String month = String.valueOf(monthNumber);
+        int yearNumber = calendar.get(Calendar.YEAR); // +1 karena Januari = 0
+        String year= String.valueOf(yearNumber);
 		String total = transaksiRepository.getTotalSpecificMonth(month,year);
-		return total;
+		List<Transaksi> transaksis = transaksiRepository.getTransaksiSpecificMonth(month,year);
+		return new TransaksiResponse(true,transaksis,total);
 	}
 	@Override
-	public String totalSpecificYear(String year) {
+	public TransaksiResponse getSpecificYear() {
+		Calendar calendar = Calendar.getInstance();
+		
+		int yearNumber = calendar.get(Calendar.YEAR); // +1 karena Januari = 0
+		String year= String.valueOf(yearNumber);
 		String total = transaksiRepository.getTotalSpecificYear(year);
-		return total;
+		List<Transaksi> transaksis   = transaksiRepository.getTransaksiSpecificYear(year);
+		return new TransaksiResponse(true,transaksis,total);
 	}
 
 	@Override
 	public TargetKeuangan totalFinancialPlan() {
-		String pengeluaran = totalAverage();
-		double pengeluaranInt = Double.valueOf(pengeluaran);
+		String rataRataSetahun = totalAverage();
+		String pengeluaranSetahun = yearTotal();
+		double pengeluaranInt = Double.valueOf(rataRataSetahun);
 		double danaPensiunInt = pengeluaranInt*12*25;
 		String danaPensiun=String.format("%.0f",danaPensiunInt);
 		String danaPensiunRdpt;
-		String danaPensiunDeposito;	
-		double apalah;
-		if(danaPensiunInt>(2*Math.pow(10, 9))) {
-			danaPensiunRdpt=String.format("%.0f", danaPensiunInt-(2*Math.pow(10, 9)));
-			apalah = (2*Math.pow(10, 9));
-			danaPensiunDeposito=String.format("%.0f",apalah);
-			
-		}else {
-			danaPensiunRdpt=String.format("%.0f", danaPensiunInt/2);
-			danaPensiunDeposito=String.format("%.0f",danaPensiunInt/2);
+		List<String> danaPensiunDeposito = new ArrayList<>();
+//		double apalah;
+		while(danaPensiunInt>(2*Math.pow(10, 9))) {
+			danaPensiunInt = danaPensiunInt-(2*Math.pow(10, 9));
+			danaPensiunDeposito.add(String.format("%.0f",2*Math.pow(10, 9)));
 		}
+		danaPensiunRdpt=String.format("%.0f", danaPensiunInt);
+//		if(danaPensiunInt>(2*Math.pow(10, 9))) {
+//			danaPensiunRdpt=String.format("%.0f", danaPensiunInt-(2*Math.pow(10, 9)));
+//			apalah = (2*Math.pow(10, 9));
+//			danaPensiunDeposito=String.format("%.0f",apalah);
+//			
+//		}else {
+//			danaPensiunRdpt=String.format("%.0f", danaPensiunInt/2);
+//			danaPensiunDeposito=String.format("%.0f",danaPensiunInt/2);
+//		}
 		double danaDaruratInt=pengeluaranInt*12;
 		String danaDarurat=String.format("%.0f",danaDaruratInt);
-		String danaDaruratRdpt=String.format("%.0f", danaDaruratInt - pengeluaranInt - (2*Math.pow(10, 7)));
-		String danaDaruratRdpu=pengeluaran;
-		apalah = (2*Math.pow(10, 7));
-		String danaDaruratDeposito=String.format("%.0f",apalah);
-		if(danaDaruratInt>(2*Math.pow(10, 7))) {
-			
-		} else {
-			
-		}
+		String danaDaruratRdpt=String.format("%.0f", danaDaruratInt - pengeluaranInt );
+		String danaDaruratRdpu=rataRataSetahun;
+//		apalah = (2*Math.pow(10, 7));
+//		String danaDaruratDeposito=String.format("%.0f",apalah);
+//		if(danaDaruratInt>(2*Math.pow(10, 7))) {
+//			
+//		} else {
+//			
+//		}
 		
-		DanaDarurat danaDarurats = new DanaDarurat("",danaDarurat,danaDaruratRdpt,danaDaruratRdpu,danaDaruratDeposito);
+		DanaDarurat danaDarurats = new DanaDarurat("",danaDarurat,danaDaruratRdpt,danaDaruratRdpu);
 		DanaPensiun danaPensiuns = new DanaPensiun("",danaPensiun,danaPensiunRdpt,danaPensiunDeposito); 
-		TargetKeuangan targetKeuangan = new TargetKeuangan(true,danaPensiuns,danaDarurats);
+		TargetKeuangan targetKeuangan = new TargetKeuangan(true,danaPensiuns,danaDarurats,pengeluaranSetahun,rataRataSetahun);
 		return targetKeuangan;
 	}
-
-	@Override
-	public String totalAverage() {
+	
+	public String yearTotal() {
 		Date dateToday = new Date();
 		Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -1);
@@ -147,23 +171,27 @@ public class TransactionServiceImpl implements TransactionBudgetService {
 		TotalRequest request = new TotalRequest();
 		request.setTanggalAkhir(formattedDateToday);
 		request.setTanggal(formattedDateLastYear);
-		String lastYearString = totalSpecificMont(request);
-//		BigDecimal lastYear = new BigDecimal(lastYearString);
+		return  totalSpecificMont(request);
+	}
+
+	@Override
+	public String totalAverage() {
+		String lastYearString = yearTotal();
 		double latestYear = Double.valueOf(lastYearString);
 		double average = latestYear/12;
 		BigDecimal bd = new BigDecimal(average);
 		bd = bd.setScale(2, RoundingMode.CEILING);
-//		String averageString=String.valueOf(average);
 		String averageString=String.format("%.0f", bd);;
-		
 		return averageString;
 	}
 
 	@Override
-	public void getAllSpend() {
-		// TODO Auto-generated method stub
-		
+	public TransaksiResponse getSpecifictRequestTransaction(TotalRequest totalRequest) {
+		List<Transaksi> transaksis = transaksiRepository.getSpecificDateTransaksi(totalRequest.getTanggal(),totalRequest.getTanggalAkhir());
+		String total = transaksiRepository.getTotalSpecificDate(totalRequest.getTanggal(),totalRequest.getTanggalAkhir());
+		return new TransaksiResponse(true,transaksis,total );
 	}
+
 
 
 }

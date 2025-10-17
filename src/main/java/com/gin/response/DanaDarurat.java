@@ -7,16 +7,13 @@ public class DanaDarurat {
 	private String nominal;
 	private String alokasiRdpt;
 	private String alokasiRdpuInstan;
-	private String alokasiDeposito;
 
-	public DanaDarurat(String keterangan, String nominal, String alokasiRdpt, String alokasiRdpuInstan,
-			String alokasiDeposito) {
+	public DanaDarurat(String keterangan, String nominal, String alokasiRdpt, String alokasiRdpuInstan) {
 		super();
 		Keterangan = keterangan;
 		this.nominal = nominal;
 		this.alokasiRdpt = alokasiRdpt;
 		this.alokasiRdpuInstan = alokasiRdpuInstan;
-		this.alokasiDeposito = alokasiDeposito;
 	}
 	public DanaDarurat(
 			) {
@@ -49,14 +46,5 @@ public class DanaDarurat {
 	public void setAlokasiRdpuInstan(String alokasiRdpuInstan) {
 		this.alokasiRdpuInstan = alokasiRdpuInstan;
 	}
-	public String getAlokasiDeposito() {
-		return alokasiDeposito;
-	}
-	public void setAlokasiDeposito(String alokasiDeposito) {
-		this.alokasiDeposito = alokasiDeposito;
-	}
-	
-
-
 
 }

@@ -2,20 +2,21 @@ package com.gin.service;
 
 import com.gin.request.TotalRequest;
 import com.gin.request.TransactionRequest;
-import com.gin.response.AddTransaksiResponse;
 import com.gin.response.TargetKeuangan;
+import com.gin.response.TransaksiResponse;
 
 public interface TransactionBudgetService {
 	
 
-	public AddTransaksiResponse tambah(TransactionRequest request);
-	public Double total();
+	public TransaksiResponse tambah(TransactionRequest request);
+	public String total();
 	public String totalSpecificMont(TotalRequest totalRequest);
 	public String totalAverage();
 
 
-	public String totalSpecificMonth(String month, String year);
-	public String totalSpecificYear(String year);
+	public TransaksiResponse getThisMonth();
+	public TransaksiResponse getSpecificYear();
 	public TargetKeuangan totalFinancialPlan();
-	public void getAllSpend();
+	public TransaksiResponse getAllTransaction();
+	public TransaksiResponse getSpecifictRequestTransaction(TotalRequest totalRequest);
 }
