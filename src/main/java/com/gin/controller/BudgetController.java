@@ -1,8 +1,5 @@
 package com.gin.controller;
 
-import java.util.Calendar;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.gin.model.Transaksi;
 import com.gin.request.TotalRequest;
 import com.gin.request.TransactionRequest;
-import com.gin.response.TransaksiResponse;
 import com.gin.response.TargetKeuangan;
+import com.gin.response.TransaksiResponse;
 import com.gin.service.TransactionBudgetService;
 
 import io.swagger.annotations.ApiOperation;
@@ -90,24 +86,6 @@ public class BudgetController {
 		}
 	}
 
-//	@ApiOperation(notes = "Ambil pengeluaran rata-rata setahun terakhir", value = "none")
-//	@RequestMapping(value = "/getaveragespend", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
-//	@ResponseBody
-//	public ResponseEntity<String> getTotalAverageYear(
-////			@RequestBody TotalRequest request
-//			) {
-//
-//		
-//		logging("/getaveragespend", "Request", "");
-//		String response = transactionBudgetService.totalAverage();
-//		
-//		if(response !=null) {
-//			logging("/getaveragespend", "Response", response);
-//			return new ResponseEntity<String>(response, HttpStatus.OK);
-//		}else {
-//			return new ResponseEntity<String>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
 	@ApiOperation(notes = "Ambil pengeluaran bulan ini", value = "none")
 	@RequestMapping(value = "/getthistmont", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
